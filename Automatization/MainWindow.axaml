@@ -4,18 +4,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
         x:Class="Automatization.MainWindow"
+		Width="600" Height="450"
+		WindowStartupLocation="CenterOwner"
         Title="Automatization">
 	<StackPanel
+		Name="TheStackPanel"
 		Margin="10">
 		<TextBox
 			Name="Name"
-			Watermark="Name"/>
+			Watermark="Ваше имя"/>
 		<TextBox
-			Name="Date"
-			Watermark="Date"/>
+			Name="Animal"
+			Watermark="Ваше любимое животное"/>
 		<TextBox
 			Name="Comment"
-			Watermark="Comment"/>
+			Watermark="Комментарий"/>
 		<Button
 			Content="Создать"
 			Click="Button_Click"/>
