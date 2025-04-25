@@ -1,0 +1,46 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="350"
+        x:Class="Automatization.Windows.MainWindow"
+		Width="450" Height="350"
+		WindowStartupLocation="CenterOwner"
+        Title="Создание документа"
+		Icon="/Assets/Icons/word.png">
+	
+	<DockPanel
+		Margin="10">
+
+		<StackPanel
+			DockPanel.Dock="Bottom"
+			Spacing="10">
+			<TextBlock
+				Name="MessageTextBlock"
+				HorizontalAlignment="Center"/>
+			<Button
+				Content="Создать"
+				Click="CreateDocumentButton_Click"
+				HorizontalAlignment="Center"/>
+		</StackPanel>
+
+		<StackPanel>
+			<TextBox
+				Name="Name"
+				KeyUp="TextBox_KeyUp"
+				Watermark="Ваше имя"
+				Margin="0 0 0 5"/>
+			<TextBox
+				Name="Animal"
+				KeyUp="TextBox_KeyUp"
+				Watermark="Ваше любимое животное"
+				Margin="0 0 0 5"/>
+			<TextBox
+				Name="Comment"
+				KeyUp="TextBox_KeyUp"
+				Watermark="Комментарий"
+				Margin="0 0 0 10"/>
+		</StackPanel>
+		
+	</DockPanel>
+</Window>

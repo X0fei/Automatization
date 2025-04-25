@@ -8,7 +8,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Automatization
+namespace Automatization.Logic
 {
     public static class WordTemplateProcessor
     {
