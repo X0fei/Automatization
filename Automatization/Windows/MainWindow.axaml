@@ -40,6 +40,8 @@
 				KeyUp="TextBox_KeyUp"
 				Watermark="Комментарий"
 				Margin="0 0 0 10"/>
+			<TextBlock
+				Text="*Созданные документы сохраняются в папку «Документы»."/>
 		</StackPanel>
 		
 	</DockPanel>
