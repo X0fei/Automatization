@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Packaging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,14 +10,18 @@ namespace Automatization.Logic
 {
     public static class TemplateProcessor
     {
-        public static bool IsTemplateValid(string templatePath)
+        public static bool IsTemplateValid(string templatePath, string outputFile)
         {
-            return File.Exists(templatePath) && Path.GetExtension(templatePath).ToLower() == ".docx";
+            using WordprocessingDocument wordDoc = WordprocessingDocument.Open(outputFile, true);
+            var mainDocumentPart = wordDoc.MainDocumentPart;
+            return File.Exists(templatePath)
+                && string.Equals(Path.GetExtension(templatePath), ".docx", StringComparison.OrdinalIgnoreCase)
+                && mainDocumentPart?.Document?.Body != null;
         }
 
-        public static void CreateDocumentFromTemplate(string templatePath, string outputFile, Dictionary<string, string> replacements)
+        public static void CreateDocumentFromTemplate(string templatePath, string outputFile, Dictionary<string, string?> replacements)
         {
-            if (IsTemplateValid(templatePath))
+            if (IsTemplateValid(templatePath, outputFile))
             {
                 WordTemplateProcessor.ReplacePlaceholders(templatePath, outputFile, replacements);
             }

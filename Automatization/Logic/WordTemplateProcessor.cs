@@ -5,34 +5,39 @@ using System.Text;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Automatization.Logic
 {
     public static class WordTemplateProcessor
     {
-        public static void ReplacePlaceholders(string templatePath, string outputPath, Dictionary<string, string> replacements)
+        public static void ReplacePlaceholders(string templatePath, string outputPath, Dictionary<string, string?> replacements)
         {
             File.Copy(templatePath, outputPath, true); // копируем шаблон
-            
-            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(outputPath, true))
-            {
-                var body = wordDoc.MainDocumentPart.Document.Body;
 
-                foreach (var text in body.Descendants<Text>())
+            using WordprocessingDocument wordDoc = WordprocessingDocument.Open(outputPath, true);
+            var mainDocumentPart = wordDoc.MainDocumentPart;
+            if (mainDocumentPart?.Document?.Body == null)
+            {
+                Console.WriteLine("Ошибка: Тело документа отсутствует. Проверьте, что файл шаблона является допустимым документом Word.");
+                return; // Завершаем выполнение метода, чтобы избежать дальнейших ошибок
+            }
+
+            var body = mainDocumentPart.Document.Body;
+
+            foreach (var text in body.Descendants<Text>())
+            {
+                foreach (var pair in replacements)
                 {
-                    foreach (var pair in replacements)
+                    if (text.Text.Contains(pair.Key))
                     {
-                        if (text.Text.Contains(pair.Key))
-                        {
-                            text.Text = text.Text.Replace(pair.Key, pair.Value);
-                        }
+                        text.Text = text.Text.Replace(pair.Key, pair.Value);
                     }
                 }
-
-                wordDoc.MainDocumentPart.Document.Save();
             }
+
+            // Ensure mainDocumentPart and Document are not null before calling Save
+            mainDocumentPart.Document?.Save();
         }
 
         public static string GetUniqueFileName(string fileName, string directory)

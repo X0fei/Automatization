@@ -8,7 +8,7 @@ namespace Automatization.Logic
 {
     public static class ValidationProcessor
     {
-        public static bool AreRequiredFieldsFilled(string name, string animal, string comment)
+        public static bool AreRequiredFieldsFilled(string? name, string? animal, string? comment)
         {
             return !string.IsNullOrWhiteSpace(name) 
                 && !string.IsNullOrWhiteSpace(animal) 
