@@ -33,4 +33,10 @@
 	</None>
   </ItemGroup>
 	
+  <ItemGroup>
+    <Compile Update="Windows\BaseModalWindow.axaml.cs">
+      <DependentUpon>BaseModalWindow.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+	
 </Project>

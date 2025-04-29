@@ -24,36 +24,44 @@ namespace Automatization.Windows
         {
             InitializeComponent();
         }
-        private void CreateDocumentButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private async void CreateDocumentButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             ControlStyler.MessageTextBlock(MessageTextBlock, 0, null);
 
             if (!ValidationProcessor.AreRequiredFieldsFilled(Name.Text, Animal.Text, Comment.Text))
             {
-                ControlStyler.HighlightAll(Name, Animal, Comment);
-                ControlStyler.MessageTextBlock(MessageTextBlock, 2, "Не все поля заполнены.");  // Выводим предупреждение, если поля пустые
-                return;
-            }
+                ConfirmationModalWindow confirm = new("Некоторые поля не заполнены или состоят только из пробелов. Вы хотите продолжить создание документа?");
+                await confirm.ShowDialog(this);  // Выводим предупреждение, если поля пустые
+                
+                if (confirm.ShouldContinue)
+                {
+                    // Продолжаем создание документа даже с пустыми полями
+                    string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Templates", "template.docx");
+                    string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    string outputFile = Path.Combine(documentsPath, Name.Text + " — шаблонный.docx");
 
-            string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Templates", "template.docx");
-            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string outputFile = Path.Combine(documentsPath, Name.Text + " — шаблонный.docx");
-            
-            var replacements = new Dictionary<string, string>
-            {
-                { "{{Name}}", Name.Text },
-                { "{{Animal}}", Animal.Text },
-                { "{{Comment}}", Comment.Text }
-            };
+                    var replacements = new Dictionary<string, string>
+                    {
+                        { "{{Name}}", Name.Text },
+                        { "{{Animal}}", Animal.Text },
+                        { "{{Comment}}", Comment.Text }
+                    };
 
-            try
-            {
-                TemplateProcessor.CreateDocumentFromTemplate(templatePath, outputFile, replacements);
-                ControlStyler.MessageTextBlock(MessageTextBlock, 1, "Документ создан!");
-            }
-            catch (FileNotFoundException)
-            {
-                ControlStyler.MessageTextBlock(MessageTextBlock, 2, "Шаблон не найден.");  // Если шаблон не найден
+                    try
+                    {
+                        TemplateProcessor.CreateDocumentFromTemplate(templatePath, outputFile, replacements);
+                        ControlStyler.MessageTextBlock(MessageTextBlock, 1, "Документ создан!");
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        ControlStyler.MessageTextBlock(MessageTextBlock, 2, "Шаблон не найден.");  // Если шаблон не найден
+                    }
+                }
+                else
+                {
+                    // Пользователь отменил действие
+                    ControlStyler.HighlightAll(Name, Animal, Comment);
+                }
             }
         }
         private void TextBox_KeyUp(object? sender, Avalonia.Input.KeyEventArgs e)
