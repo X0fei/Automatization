@@ -7,7 +7,7 @@
 		Width="450" Height="350"
 		WindowStartupLocation="CenterOwner"
         Title="Создание документа"
-		Icon="/Assets/Icons/word.png">
+		Icon="/Assets/Icons/icon.ico">
 	
 	<DockPanel
 		Margin="10">
