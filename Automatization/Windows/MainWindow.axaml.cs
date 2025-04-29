@@ -36,32 +36,48 @@ namespace Automatization.Windows
                 if (confirm.ShouldContinue)
                 {
                     // Продолжаем создание документа даже с пустыми полями
-                    string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Templates", "template.docx");
-                    string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                    string outputFile = Path.Combine(documentsPath, Name.Text + " — шаблонный.docx");
-
-                    var replacements = new Dictionary<string, string>
-                    {
-                        { "{{Name}}", Name.Text },
-                        { "{{Animal}}", Animal.Text },
-                        { "{{Comment}}", Comment.Text }
-                    };
-
-                    try
-                    {
-                        TemplateProcessor.CreateDocumentFromTemplate(templatePath, outputFile, replacements);
-                        ControlStyler.MessageTextBlock(MessageTextBlock, 1, "Документ создан!");
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        ControlStyler.MessageTextBlock(MessageTextBlock, 2, "Шаблон не найден.");  // Если шаблон не найден
-                    }
+                    DocumentCreation();
                 }
                 else
                 {
                     // Пользователь отменил действие
                     ControlStyler.HighlightAll(Name, Animal, Comment);
                 }
+            }
+            else
+            {
+                DocumentCreation();
+            }
+        }
+
+        private void DocumentCreation()
+        {
+            string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Templates", "template.docx");
+
+            // Получаем путь к папке «Документы»
+            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            // Начальное имя файла
+            string outputFileName = Path.Combine(documentsPath, Name.Text + " — шаблонный.docx");
+
+            // Получаем уникальное имя для файла
+            string uniqueFileName = WordTemplateProcessor.GetUniqueFileName(outputFileName, documentsPath);
+
+            var replacements = new Dictionary<string, string>
+            {
+                { "{{Name}}", Name.Text },
+                { "{{Animal}}", Animal.Text },
+                { "{{Comment}}", Comment.Text }
+            };
+
+            try
+            {
+                TemplateProcessor.CreateDocumentFromTemplate(templatePath, uniqueFileName, replacements);
+                ControlStyler.MessageTextBlock(MessageTextBlock, 1, "Документ создан!");
+            }
+            catch (FileNotFoundException)
+            {
+                ControlStyler.MessageTextBlock(MessageTextBlock, 2, "Шаблон не найден.");  // Если шаблон не найден
             }
         }
         private void TextBox_KeyUp(object? sender, Avalonia.Input.KeyEventArgs e)
