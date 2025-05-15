@@ -12,7 +12,7 @@ namespace Automatization.Logic
     {
         public static bool IsTemplateValid(string templatePath, string outputFile)
         {
-            using WordprocessingDocument wordDoc = WordprocessingDocument.Open(outputFile, true);
+            using WordprocessingDocument wordDoc = WordprocessingDocument.Open(templatePath, true);
             var mainDocumentPart = wordDoc.MainDocumentPart;
             return File.Exists(templatePath)
                 && string.Equals(Path.GetExtension(templatePath), ".docx", StringComparison.OrdinalIgnoreCase)
